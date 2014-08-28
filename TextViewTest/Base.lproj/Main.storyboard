@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="12F45" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="22n-c3-oHa">
-                                <rect key="frame" x="20" y="20" width="280" height="490"/>
+                                <rect key="frame" x="0.0" y="64" width="320" height="460"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
@@ -25,7 +25,7 @@
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rxa-Il-zTI">
-                                <rect key="frame" x="20" y="518" width="280" height="30"/>
+                                <rect key="frame" x="20" y="532" width="280" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.25098040700000002" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <state key="normal" title="Set Text">
@@ -39,13 +39,13 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="Rxa-Il-zTI" firstAttribute="top" secondItem="22n-c3-oHa" secondAttribute="bottom" constant="8" symbolic="YES" id="8VF-OZ-X4h"/>
-                            <constraint firstAttribute="trailing" secondItem="22n-c3-oHa" secondAttribute="trailing" constant="20" symbolic="YES" id="aNb-4d-rXO"/>
-                            <constraint firstAttribute="bottom" secondItem="Rxa-Il-zTI" secondAttribute="bottom" constant="20" symbolic="YES" id="fHG-3A-MAU"/>
-                            <constraint firstItem="22n-c3-oHa" firstAttribute="leading" secondItem="Rxa-Il-zTI" secondAttribute="leading" id="j3r-yk-AKK"/>
-                            <constraint firstItem="Rxa-Il-zTI" firstAttribute="trailing" secondItem="22n-c3-oHa" secondAttribute="trailing" id="pS7-aj-3A1"/>
-                            <constraint firstItem="22n-c3-oHa" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="20" symbolic="YES" id="y8J-UH-hco"/>
-                            <constraint firstItem="22n-c3-oHa" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" constant="20" symbolic="YES" id="yu9-om-Mj4"/>
+                            <constraint firstAttribute="trailing" secondItem="Rxa-Il-zTI" secondAttribute="trailing" constant="20" symbolic="YES" id="4Xy-kL-NAh"/>
+                            <constraint firstItem="Rxa-Il-zTI" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="20" symbolic="YES" id="DTL-5z-0gc"/>
+                            <constraint firstItem="22n-c3-oHa" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="DTj-be-uOV"/>
+                            <constraint firstItem="22n-c3-oHa" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="44" id="bGw-wK-ngu"/>
+                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="Rxa-Il-zTI" secondAttribute="bottom" constant="6" id="i23-cQ-g3w"/>
+                            <constraint firstItem="22n-c3-oHa" firstAttribute="centerX" secondItem="Rxa-Il-zTI" secondAttribute="centerX" id="sTw-7S-NXM"/>
+                            <constraint firstItem="Rxa-Il-zTI" firstAttribute="top" secondItem="22n-c3-oHa" secondAttribute="bottom" constant="8" symbolic="YES" id="t2A-za-NkB"/>
                         </constraints>
                     </view>
                     <connections>
