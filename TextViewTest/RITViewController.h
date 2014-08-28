@@ -10,4 +10,7 @@
 
 @interface RITViewController : UIViewController
 
+@property (weak, nonatomic) IBOutlet UITextView *textView;
+- (IBAction)setTextButton:(UIButton *)sender;
+
 @end
