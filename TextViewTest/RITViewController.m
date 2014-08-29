@@ -7,6 +7,7 @@
 //
 
 #import "RITViewController.h"
+#import <CoreText/CoreText.h>
 
 @interface RITViewController ()
 
@@ -28,19 +29,71 @@
 
 - (IBAction)setTextButton:(UIButton *)sender {
     
-    NSString *text = @"В 1943-м году американские войска, дислоцированные в тропиках, подвергались серьезным атакам насекомых. Это было просто стихийным бедствием. Ни спать, ни есть комары не давали. Солдаты ходили вялые, мрачные, стреляли в молоко. Командование рапортовало о ситуации в центр, где к этому отнеслись серьезно и нашли двух экспертов для решения необычной задачи. Эксперты уселись изучать старые патенты и изобретения.\nУстав от длительных изысканий, Лайл, служащий Министерства Сельского Хозяйства, уже";
+    /*
+     NSString *text = @"В 1943-м году американские войска, дислоцированные в тропиках, подвергались серьезным атакам насекомых. Это было просто стихийным бедствием. Ни спать, ни есть комары не давали. Солдаты ходили вялые, мрачные, стреляли в молоко. Командование рапортовало о ситуации в центр, где к этому отнеслись серьезно и нашли двух экспертов для решения необычной задачи. Эксперты уселись изучать старые патенты и изобретения.\nУстав от длительных изысканий, Лайл, служащий Министерства Сельского Хозяйства, уже";
+     */
     
-    NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:text attributes:@{NSFontAttributeName:[UIFont fontWithName:@"Helvetica Neue" size:17]}];
+     NSString *text = @"собрался домой. Кряхтя, поднялся из-за неудобного казённого стола и направился к шкафу, заваленному книгами и справочниками. Он уже убирал очередной том с собранием различных патентов в дальний угол, как вдруг отвлёкся на скрипнувшую дверь. Это вошёл его коллега и брат по несчастью, Уильям. Книга выпала из рук, раскрывшись на странице с затейливым рисунком. Лайл поправил очки и наклонился за книгой. Полнота делала этот процесс непростым.\n- Вот, смотри, - Лайл Гудхью ткнул толстым пальцем в описание патента номер 2170531.";
     
+    
+    UIFont *font = [UIFont fontWithName:@"Helvetica Neue" size:16];
+    NSLog(@"Font line height: %f", font.lineHeight);
+    
+    NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:text attributes:@{NSFontAttributeName:font}];
     NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
     paragraphStyle.alignment = NSTextAlignmentJustified;
     paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
-    paragraphStyle.paragraphSpacing = 20.f;
-    paragraphStyle.lineSpacing = 5.f;
+    paragraphStyle.paragraphSpacing = 10.f;
+    paragraphStyle.lineSpacing = 1.f;
     [attributedText addAttribute:NSParagraphStyleAttributeName
                              value:paragraphStyle
                              range:NSMakeRange(0, [text length])];
+    
+    CGSize viewSize = self.textView.bounds.size;
+    //viewSize.height -= font.lineHeight;
+    //viewSize.height -= font.lineHeight * 2.5f;
+    //viewSize.height -= 17;
+    CGRect textRect;
+    CGFloat lineSpacing = 1.f;
+    
+    while (CGRectGetHeight(textRect) < viewSize.height) {
+        
+        lineSpacing += 0.1f;
+        NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc] initWithString:text attributes:@{NSFontAttributeName:font}];
+        NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
+        paragraphStyle.alignment = NSTextAlignmentJustified;
+        paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+        paragraphStyle.paragraphSpacing = 10.f;
+        paragraphStyle.lineSpacing = lineSpacing;
+        [attributedText addAttribute:NSParagraphStyleAttributeName
+                               value:paragraphStyle
+                               range:NSMakeRange(0, [text length])];
+        
+        // first method
+        /*
+        textRect = [attributedText
+                    boundingRectWithSize:CGSizeMake(viewSize.width, CGFLOAT_MAX)
+                    options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
+                    context:nil];
+        textRect = CGRectIntegral(textRect);
+        NSLog(@"Method 01 for text rect: %@", NSStringFromCGRect(textRect));
+        */
+        
+        // second method
+        CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((__bridge CFAttributedStringRef)attributedText);
+        CGSize targetSize = CGSizeMake(viewSize.width, CGFLOAT_MAX);
+        CGSize fitSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, [attributedText length]), NULL, targetSize, NULL);
+        CFRelease(framesetter);
+        CGRect textRect2 = CGRectMake(0, 0, fitSize.width, fitSize.height);
+        textRect = textRect2;
+        NSLog(@"Method 02 for text rect: %@", NSStringFromCGRect(textRect2));
+    }
+    
+    
     self.textView.attributedText = attributedText;
+    
+    NSLog(@"\n");
+    NSLog(@"viewRect: %@", NSStringFromCGRect(self.textView.bounds));
 }
 
 /*
