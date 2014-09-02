@@ -43,31 +43,38 @@ const CGFloat fontSizeInitialValue = 16.f;
     //NSLog(@"[%@ %@] -- hasNonContiguousLayout: %d", [self class], NSStringFromSelector(_cmd), _textView.layoutManager.hasNonContiguousLayout);
     // RIT DEBUG
     
-    NSCharacterSet *endSentenceSet = [NSCharacterSet characterSetWithCharactersInString:@".!?"];
+    /*
     NSRange lastCharRange = NSMakeRange([_text length] - 1, 1);
     NSString *lastChar = [_text substringWithRange:lastCharRange];
-    if ([lastChar isEqualToString:@"."]) {
+    */
+    NSCharacterSet *endSentenceSet = [NSCharacterSet characterSetWithCharactersInString:@".!?"];
+    unichar lastChar = [_text characterAtIndex:_text.length - 1];
+    if (![endSentenceSet characterIsMember:lastChar]) {
         
+        [self lastParagraphStretchingForTextView:_textView];
     }
     
-    [self lastParagraphForString:_text withTextView:_textView];
 }
 
-- (void)lastParagraphForString:(NSString *)text withTextView:(UITextView *)textView
+- (void)lastParagraphStretchingForTextView:(UITextView *)textView
 {
     
+    UITextPosition *Pos1 = [textView positionFromPosition: textView.endOfDocument offset: -1];
     UITextPosition *Pos2 = [textView positionFromPosition: textView.endOfDocument offset: 0];
-    UITextPosition *Pos1 = [textView positionFromPosition: textView.endOfDocument offset: -3];
     
     UITextRange *range = [textView textRangeFromPosition:Pos1 toPosition:Pos2];
     
-    CGRect result1 = [textView firstRectForRange:(UITextRange *)range ];
+    CGRect lastCharRect = CGRectIntegral([textView firstRectForRange:(UITextRange *)range]);
+    CGFloat charMaxX = CGRectGetMaxX(lastCharRect);
+    CGFloat viewMaxX = CGRectGetMaxX(textView.frame);
     
-    NSLog(@"%f, %f", result1.origin.x, result1.origin.y);
+    NSLog(@"lastCharRect: %@", NSStringFromCGRect(lastCharRect));
+    NSLog(@"MaxX: %f", charMaxX);
+    NSLog(@"viewMaxX: %f", viewMaxX);
     
-    UIView *view1 = [[UIView alloc] initWithFrame:result1];
-    view1.backgroundColor = [UIColor colorWithRed:0.2f green:0.5f blue:0.2f alpha:0.4f];
-    [textView addSubview:view1];
+    UIView *view = [[UIView alloc] initWithFrame:lastCharRect];
+    view.backgroundColor = [UIColor colorWithRed:0.2f green:0.5f blue:0.2f alpha:0.4f];
+    [textView addSubview:view];
 }
 
 - (void)didReceiveMemoryWarning
@@ -152,7 +159,7 @@ const CGFloat fontSizeInitialValue = 16.f;
 }
 
 - (IBAction)setTextButton:(UIButton *)sender {
-    [self lastParagraphForString:_text withTextView:_textView];
+    [self lastParagraphStretchingForTextView:_textView];
 }
 
 /*
