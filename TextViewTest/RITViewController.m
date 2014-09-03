@@ -29,15 +29,13 @@ const CGFloat fontSizeInitialValue = 16.f;
     /*
      _text = @"собрался домой. Кряхтя, поднялся из-за неудобного казённого стола и направился к шкафу, заваленному книгами и справочниками. Он уже убирал очередной том с собранием различных патентов в дальний угол, как вдруг отвлёкся на скрипнувшую дверь. Это вошёл его коллега и брат по несчастью, Уильям. Книга выпала из рук, раскрывшись на странице с затейливым рисунком. Лайл поправил очки и наклонился за книгой. Полнота делала этот процесс непростым.\n- Вот, смотри, - Лайл Гудхью ткнул толстым пальцем в описание патента номер 2170531.";
      */
-    
     _text = @"В 1943-м году американские войска, дислоцированные в тропиках, подвергались серьезным атакам насекомых. Это было просто стихийным бедствием. Ни спать, ни есть комары не давали. Солдаты ходили вялые, мрачные, стреляли в молоко. Командование рапортовало о ситуации в центр, где к этому отнеслись серьезно и нашли двух экспертов для решения необычной задачи. Эксперты уселись изучать старые патенты и изобретения.\nУстав от длительных изысканий, Лайл, служащий Министерства Сельского Хозяйства, уже";
     
     //_textView.layoutManager.showsInvisibleCharacters = YES;
     
-    [self layoutAttributedText:_text withSize:self.textView.frame.size];
+    [self layoutText:_text withTextView:self.textView];
     
     //[_textView.layoutManager ensureLayoutForCharacterRange:NSMakeRange(0, [_textView.textStorage length])];
-    [_textView.layoutManager ensureLayoutForTextContainer:_textView.textContainer];
     
     // RIT DEBUG
     //NSLog(@"[%@ %@] -- hasNonContiguousLayout: %d", [self class], NSStringFromSelector(_cmd), _textView.layoutManager.hasNonContiguousLayout);
@@ -47,24 +45,33 @@ const CGFloat fontSizeInitialValue = 16.f;
     NSRange lastCharRange = NSMakeRange([_text length] - 1, 1);
     NSString *lastChar = [_text substringWithRange:lastCharRange];
     */
-    NSCharacterSet *endSentenceSet = [NSCharacterSet characterSetWithCharactersInString:@".!?"];
-    unichar lastChar = [_text characterAtIndex:_text.length - 1];
-    if (![endSentenceSet characterIsMember:lastChar]) {
-        
-        [self lastParagraphStretchingForTextView:_textView];
-    }
-    
+    //[_textView.layoutManager ensureLayoutForTextContainer:_textView.textContainer];
 }
 
-- (void)lastParagraphStretchingForTextView:(UITextView *)textView
+- (CGRect)lastCharRectForTextView:(UITextView *)textView andRange:(NSRange)textRange
 {
-    
+    [textView.layoutManager ensureLayoutForTextContainer:textView.textContainer];
+    //[textView.layoutManager ensureLayoutForCharacterRange:textRange];
     UITextPosition *Pos1 = [textView positionFromPosition: textView.endOfDocument offset: -1];
     UITextPosition *Pos2 = [textView positionFromPosition: textView.endOfDocument offset: 0];
     
     UITextRange *range = [textView textRangeFromPosition:Pos1 toPosition:Pos2];
     
-    CGRect lastCharRect = CGRectIntegral([textView firstRectForRange:(UITextRange *)range]);
+    return CGRectIntegral([textView firstRectForRange:(UITextRange *)range]);
+}
+
+- (NSAttributedString *)lastParagraphStretchingForAttributedText:(NSAttributedString *)attributedText andViewSize:(CGSize)size
+{
+    NSTextStorage *textStorege = [[NSTextStorage alloc] initWithAttributedString:attributedText];
+    NSLayoutManager *layoutManager = [[NSLayoutManager alloc] init];
+    [textStorege addLayoutManager:layoutManager];
+    NSTextContainer *textContainer = [[NSTextContainer alloc] initWithSize:size];
+    [layoutManager addTextContainer:textContainer];
+    CGRect viewRect = CGRectMake(0, 0, size.width, size.height);
+    UITextView *textView = [[UITextView alloc] initWithFrame:viewRect textContainer:textContainer];
+    
+    CGRect lastCharRect = [self lastCharRectForTextView:textView andRange:NSMakeRange(0, [textView.textStorage length])];
+    
     CGFloat charMaxX = CGRectGetMaxX(lastCharRect);
     CGFloat viewMaxX = CGRectGetMaxX(textView.frame);
     
@@ -72,9 +79,77 @@ const CGFloat fontSizeInitialValue = 16.f;
     NSLog(@"MaxX: %f", charMaxX);
     NSLog(@"viewMaxX: %f", viewMaxX);
     
+    // RIT DEBUG
+    /*
     UIView *view = [[UIView alloc] initWithFrame:lastCharRect];
     view.backgroundColor = [UIColor colorWithRed:0.2f green:0.5f blue:0.2f alpha:0.4f];
     [textView addSubview:view];
+    */
+    // RIT DEBUG
+    
+    // Retrieve last paragraph
+    NSString *text = textView.text;
+    __block NSString *lastParagraph = nil;
+    __block NSRange lastParagraphRange = {.location = 0, .length = 0};
+    [text enumerateSubstringsInRange:NSMakeRange(0, text.length)
+     //options:NSStringEnumerationByParagraphs
+                             options:NSStringEnumerationByParagraphs
+     
+                          usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop) {
+                              
+                              if (substringRange.length > 0) {
+                                  
+                                  lastParagraph = substring;
+                                  lastParagraphRange = substringRange;
+                              }
+                          }];
+    // RIT DEBUG
+    NSLog(@"lastParagraph: %@ lastParagraphRange: %@", lastParagraph, NSStringFromRange(lastParagraphRange));
+    // RIT DEBUG
+    
+    text = [text substringToIndex:lastParagraphRange.location];
+    NSMutableParagraphStyle *paragraphStyle = [attributedText attribute:NSParagraphStyleAttributeName atIndex:0 effectiveRange:NULL];
+    UIFont *font = [attributedText attribute:NSFontAttributeName atIndex:0 effectiveRange:NULL];
+    // RIT DEBUG
+    //NSLog(@"text: %@", text);
+    // RIT DEBUG
+    
+    NSMutableArray* words = [[NSMutableArray alloc] initWithArray:[lastParagraph componentsSeparatedByString:@" "]];
+    NSUInteger numWords = [words count];
+    // RIT DEBUG
+    NSLog(@"numWords: %d", numWords);
+    // RIT DEBUG
+    if ( numWords <= 1 ) return attributedText;
+    NSAttributedString *suitableAttributedText = attributedText;
+    for (int index = 0; index < 100; index++) {
+        
+        NSUInteger wordNum = index % (numWords - 1);
+        NSString *word = words[wordNum];
+        word = [NSString stringWithFormat:@"%@ ", word];
+        words[wordNum] = word;
+        NSMutableString *newLastParagraph = [NSMutableString stringWithString:words[0]];
+        for (int i = 1; i < [words count]; i++) {
+            
+            [newLastParagraph appendFormat:@" %@", words[i]];
+        }
+        text = [NSString stringWithFormat:@"%@%@", text, newLastParagraph];
+        NSAttributedString *newAttributedText = [[NSAttributedString alloc]
+                                                 initWithString:text
+                                                 attributes:
+                                                 @{
+                                                   NSFontAttributeName:font,
+                                                   NSParagraphStyleAttributeName:paragraphStyle
+                                                   }];
+        textView.attributedText = newAttributedText;
+        CGRect newLastCharRect = [self lastCharRectForTextView:textView andRange:NSMakeRange(0, [textView.textStorage length])];
+        // RIT DEBUG
+        NSLog(@"newLastCharRect: %@", NSStringFromCGRect(newLastCharRect));
+        // RIT DEBUG
+        if (lastCharRect.origin.y != newLastCharRect.origin.y) break;
+        suitableAttributedText = newAttributedText;
+        //NSLog(@"newLastParagraph: %@", newLastParagraph);
+    }
+    return suitableAttributedText;
 }
 
 - (void)didReceiveMemoryWarning
@@ -83,14 +158,14 @@ const CGFloat fontSizeInitialValue = 16.f;
     // Dispose of any resources that can be recreated.
 }
 
-- (void)layoutAttributedText:(NSString *)text withSize:(CGSize)size
+- (void)layoutText:(NSString *)text withTextView:(UITextView *)textView
 {
     CGFloat appropriateLineSpacing;
     CGFloat lineSpacing = appropriateLineSpacing = lineSpacingInitialValue;
     CGFloat paragraphSpacing = paragraphSpacingInitialValue;
-    NSMutableAttributedString *attributedText = nil;
+    NSAttributedString *attributedText = nil;
     UIFont *font = [UIFont fontWithName:@"Helvetica Neue" size:fontSizeInitialValue];
-    CGSize viewSize = size;
+    CGSize viewSize = textView.frame.size;
     CGRect textRect;
     
     // stretch text to fill page rect
@@ -117,6 +192,15 @@ const CGFloat fontSizeInitialValue = 16.f;
         attributedText = [self attributedText:text withLineSpacing:appropriateLineSpacing paragraphSpacing:paragraphSpacing andFont:font];
         textRect = [self rectForAttributedText:attributedText andSize:viewSize];
     }
+    
+    // last paragraph string stretching
+    NSCharacterSet *endSentenceSet = [NSCharacterSet characterSetWithCharactersInString:@".!?"];
+    unichar lastChar = [_text characterAtIndex:_text.length - 1];
+    if (![endSentenceSet characterIsMember:lastChar]) {
+        
+        attributedText = [self lastParagraphStretchingForAttributedText:attributedText andViewSize:viewSize];
+    }
+    
     self.textView.attributedText = attributedText;
 }
 
@@ -141,25 +225,34 @@ const CGFloat fontSizeInitialValue = 16.f;
     return textRect;
 }
 
-- (NSMutableAttributedString *)attributedText:(NSString *)text withLineSpacing:(CGFloat)lineSpacing paragraphSpacing:(CGFloat)paragraphSpacing andFont:(UIFont *)font
+- (NSAttributedString *)attributedText:(NSString *)text withLineSpacing:(CGFloat)lineSpacing paragraphSpacing:(CGFloat)paragraphSpacing andFont:(UIFont *)font
 {
-    NSMutableAttributedString *attributedText = nil;
-    NSMutableParagraphStyle *paragraphStyle = nil;
-    attributedText = [[NSMutableAttributedString alloc] initWithString:text attributes:@{NSFontAttributeName:font}];
-    paragraphStyle = [NSMutableParagraphStyle new];
+    NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
     paragraphStyle.alignment = NSTextAlignmentJustified;
     paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
     paragraphStyle.paragraphSpacing = paragraphSpacing;
     paragraphStyle.lineSpacing = lineSpacing;
+    /*
+    NSMutableAttributedString *attributedText = nil;
+    attributedText = [[NSMutableAttributedString alloc] initWithString:text attributes:@{NSFontAttributeName:font}];
     [attributedText addAttribute:NSParagraphStyleAttributeName
                            value:paragraphStyle
                            range:NSMakeRange(0, [text length])];
+     */
     
-    return attributedText;
+    NSAttributedString *newAttributedText = [[NSAttributedString alloc]
+                                             initWithString:text
+                                             attributes:
+                                                @{
+                                                  NSFontAttributeName:font,
+                                                  NSParagraphStyleAttributeName:paragraphStyle
+                                                  }];
+    
+    
+    return newAttributedText;
 }
 
 - (IBAction)setTextButton:(UIButton *)sender {
-    [self lastParagraphStretchingForTextView:_textView];
 }
 
 /*
