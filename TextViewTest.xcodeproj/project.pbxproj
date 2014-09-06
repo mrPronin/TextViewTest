@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3E18C63D19BB3B8000EF4DDA /* RITTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E18C63C19BB3B8000EF4DDA /* RITTextView.m */; };
+		3EAE7C6F19BB551F0021102F /* RITTextViewLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EAE7C6E19BB551F0021102F /* RITTextViewLayer.m */; };
+		3EB0443419B7646A00CE05AC /* RITCoreTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EB0443319B7646900CE05AC /* RITCoreTextViewController.m */; };
 		A227342C19ACEC49007A8858 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A227342B19ACEC49007A8858 /* Foundation.framework */; };
 		A227342E19ACEC49007A8858 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A227342D19ACEC49007A8858 /* CoreGraphics.framework */; };
 		A227343019ACEC49007A8858 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A227342F19ACEC49007A8858 /* UIKit.framework */; };
@@ -35,6 +38,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3E18C63B19BB3B8000EF4DDA /* RITTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RITTextView.h; path = Classes/RITTextView.h; sourceTree = "<group>"; };
+		3E18C63C19BB3B8000EF4DDA /* RITTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RITTextView.m; path = Classes/RITTextView.m; sourceTree = "<group>"; };
+		3EAE7C6D19BB551F0021102F /* RITTextViewLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RITTextViewLayer.h; path = Classes/RITTextViewLayer.h; sourceTree = "<group>"; };
+		3EAE7C6E19BB551F0021102F /* RITTextViewLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RITTextViewLayer.m; path = Classes/RITTextViewLayer.m; sourceTree = "<group>"; };
+		3EB0443219B7646900CE05AC /* RITCoreTextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RITCoreTextViewController.h; sourceTree = "<group>"; };
+		3EB0443319B7646900CE05AC /* RITCoreTextViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RITCoreTextViewController.m; sourceTree = "<group>"; };
 		A227342819ACEC49007A8858 /* TextViewTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TextViewTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A227342B19ACEC49007A8858 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		A227342D19ACEC49007A8858 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -82,6 +91,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3EAE7C6C19BB54B70021102F /* RITTextView */ = {
+			isa = PBXGroup;
+			children = (
+				3E18C63B19BB3B8000EF4DDA /* RITTextView.h */,
+				3E18C63C19BB3B8000EF4DDA /* RITTextView.m */,
+				3EAE7C6D19BB551F0021102F /* RITTextViewLayer.h */,
+				3EAE7C6E19BB551F0021102F /* RITTextViewLayer.m */,
+			);
+			name = RITTextView;
+			sourceTree = "<group>";
+		};
 		A227341F19ACEC49007A8858 = {
 			isa = PBXGroup;
 			children = (
@@ -116,12 +136,15 @@
 		A227343119ACEC49007A8858 /* TextViewTest */ = {
 			isa = PBXGroup;
 			children = (
+				3EAE7C6C19BB54B70021102F /* RITTextView */,
 				A227343A19ACEC49007A8858 /* RITAppDelegate.h */,
 				A227343B19ACEC49007A8858 /* RITAppDelegate.m */,
 				A227343D19ACEC49007A8858 /* Main.storyboard */,
 				A227344019ACEC49007A8858 /* RITViewController.h */,
 				A227344119ACEC49007A8858 /* RITViewController.m */,
 				A227344319ACEC49007A8858 /* Images.xcassets */,
+				3EB0443219B7646900CE05AC /* RITCoreTextViewController.h */,
+				3EB0443319B7646900CE05AC /* RITCoreTextViewController.m */,
 				A227343219ACEC49007A8858 /* Supporting Files */,
 			);
 			path = TextViewTest;
@@ -256,6 +279,9 @@
 			files = (
 				A227343C19ACEC49007A8858 /* RITAppDelegate.m in Sources */,
 				A227343819ACEC49007A8858 /* main.m in Sources */,
+				3E18C63D19BB3B8000EF4DDA /* RITTextView.m in Sources */,
+				3EAE7C6F19BB551F0021102F /* RITTextViewLayer.m in Sources */,
+				3EB0443419B7646A00CE05AC /* RITCoreTextViewController.m in Sources */,
 				A227344219ACEC49007A8858 /* RITViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

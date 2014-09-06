@@ -18,6 +18,7 @@ const CGFloat fontSizeInitialValue = 16.f;
 @interface RITViewController ()
 
 @property (strong, nonatomic) NSString *text;
+@property (assign, nonatomic) CGRect pageRect;
 
 @end
 
@@ -26,6 +27,8 @@ const CGFloat fontSizeInitialValue = 16.f;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    _pageRect = CGRectMake(0, 64, 320, 460);
+    //_textView.frame = _pageRect;
     /*
      _text = @"собрался домой. Кряхтя, поднялся из-за неудобного казённого стола и направился к шкафу, заваленному книгами и справочниками. Он уже убирал очередной том с собранием различных патентов в дальний угол, как вдруг отвлёкся на скрипнувшую дверь. Это вошёл его коллега и брат по несчастью, Уильям. Книга выпала из рук, раскрывшись на странице с затейливым рисунком. Лайл поправил очки и наклонился за книгой. Полнота делала этот процесс непростым.\n- Вот, смотри, - Лайл Гудхью ткнул толстым пальцем в описание патента номер 2170531.";
      */
@@ -34,6 +37,12 @@ const CGFloat fontSizeInitialValue = 16.f;
     //_textView.layoutManager.showsInvisibleCharacters = YES;
     
     [self layoutText:_text withTextView:self.textView];
+    
+    // RIT DEBUG
+    NSLog(@"Text view frame: %@", NSStringFromCGRect(_textView.frame));
+    // RIT DEBUG
+    
+    //self.heightConstraint.constant = CGRectGetHeight(_pageRect);
     
     //[_textView.layoutManager ensureLayoutForCharacterRange:NSMakeRange(0, [_textView.textStorage length])];
     
@@ -198,7 +207,7 @@ const CGFloat fontSizeInitialValue = 16.f;
     unichar lastChar = [_text characterAtIndex:_text.length - 1];
     if (![endSentenceSet characterIsMember:lastChar]) {
         
-        attributedText = [self lastParagraphStretchingForAttributedText:attributedText andViewSize:viewSize];
+        //attributedText = [self lastParagraphStretchingForAttributedText:attributedText andViewSize:viewSize];
     }
     
     self.textView.attributedText = attributedText;

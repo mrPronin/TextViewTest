@@ -12,5 +12,6 @@
 
 @property (weak, nonatomic) IBOutlet UITextView *textView;
 - (IBAction)setTextButton:(UIButton *)sender;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *heightConstraint;
 
 @end
