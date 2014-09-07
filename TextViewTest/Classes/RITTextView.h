@@ -12,5 +12,6 @@
 @interface RITTextView : UIView
 
 @property (nonatomic, readwrite, copy) NSAttributedString *attributedString;
+@property (assign, nonatomic) CGFloat textInset;
 
 @end

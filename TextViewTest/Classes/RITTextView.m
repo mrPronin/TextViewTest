@@ -45,16 +45,29 @@
 #pragma mark -
 #pragma mark Accessors
 
-- (NSAttributedString *)attributedString {
+- (NSAttributedString *)attributedString
+{
     return [self.textLayer attributedString];
 }
 
-- (void)setAttributedString:(NSAttributedString *)attributedString {
+- (void)setAttributedString:(NSAttributedString *)attributedString
+{
     [self.textLayer setAttributedString:attributedString];
 }
 
-- (RITTextViewLayer *)textLayer {
+- (RITTextViewLayer *)textLayer
+{
     return (RITTextViewLayer*)self.layer;
+}
+
+- (CGFloat)textInset
+{
+    return [self.textLayer textInset];
+}
+
+- (void)setTextInset:(CGFloat)textInset
+{
+    [self.textLayer setTextInset:textInset];
 }
 
 @end
