@@ -63,11 +63,10 @@ const CGFloat fontSizeInitialValue = 16.f;
 
 - (void)layoutText:(NSString *)text
 {
-    //const CGFloat lineSpacingStretchStep = 1.f;
     const CGFloat lineSpacingInitialValue = 0;
     const CGFloat paragraphSpacingInitialValue = 10.f;
-    //const CGFloat paragraphSpacingShrinkStep = 1.f;
     const CGFloat fontSizeInitialValue = 18.f;
+    
     CGFloat appropriateLineSpacing;
     CGFloat lineSpacing = appropriateLineSpacing = lineSpacingInitialValue;
     CGFloat paragraphSpacing = paragraphSpacingInitialValue;
