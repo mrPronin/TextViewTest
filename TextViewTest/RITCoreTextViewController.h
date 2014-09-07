@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "RITTextView.h"
 
 @interface RITCoreTextViewController : UIViewController
 
-@property (weak, nonatomic) IBOutlet UIView *textView;
+@property (weak, nonatomic) IBOutlet RITTextView *textView;
 - (IBAction)actionBarButton:(UIBarButtonItem *)sender;
 
 @end

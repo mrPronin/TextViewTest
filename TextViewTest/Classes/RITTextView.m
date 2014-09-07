@@ -7,25 +7,54 @@
 //
 
 #import "RITTextView.h"
+#import "RITTextViewLayer.h"
 
 @implementation RITTextView
+
+#pragma mark -
+#pragma mark UIView
+
++ (Class)layerClass
+{
+    return [RITTextViewLayer class];
+}
+
+#pragma mark -
+#pragma mark Init
 
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
+    if (self != nil) {
+        [self finishInit];
     }
     return self;
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
+- (void)awakeFromNib
 {
-    // Drawing code
+    [self finishInit];
 }
-*/
+
+- (void)finishInit
+{
+    self.layer.geometryFlipped = YES;
+    self.contentScaleFactor = [[UIScreen mainScreen] scale];
+}
+
+#pragma mark -
+#pragma mark Accessors
+
+- (NSAttributedString *)attributedString {
+    return [self.textLayer attributedString];
+}
+
+- (void)setAttributedString:(NSAttributedString *)attributedString {
+    [self.textLayer setAttributedString:attributedString];
+}
+
+- (RITTextViewLayer *)textLayer {
+    return (RITTextViewLayer*)self.layer;
+}
 
 @end

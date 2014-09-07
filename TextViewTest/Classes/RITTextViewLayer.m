@@ -39,7 +39,7 @@ static const CFRange kRangeZero = {0, 0};
     CGContextSetTextMatrix(context, CGAffineTransformIdentity);
     
     // Work out the geometry
-    CGRect insetBounds = CGRectInset([self bounds], 40.0, 40.0);
+    CGRect insetBounds = CGRectInset([self bounds], 5.0, 5.0);
     CGFloat boundsWidth = CGRectGetWidth(insetBounds);
     
     // Start in the upper-left corner
@@ -89,14 +89,10 @@ static const CFRange kRangeZero = {0, 0};
     // Fetch the typographic bounds
     CTLineGetTypographicBounds(line, &(*ascent), &(*descent), &(*leading));
     
-    // Full-justify all but last line of paragraphs
-    NSString *string = self.attributedString.string;
-    NSUInteger endingLocation = startIndex + lineCharacterCount;
-    if (endingLocation >= string.length || [string characterAtIndex:endingLocation] != '\n') {
-        CTLineRef justifiedLine = CTLineCreateJustifiedLine(line, 1.0, boundsWidth);
-        CFRelease(line);
-        line = justifiedLine;
-    }
+    // Full-justify all lines
+    CTLineRef justifiedLine = CTLineCreateJustifiedLine(line, 1.0, boundsWidth);
+    CFRelease(line);
+    line = justifiedLine;
     return line;
 }
 
@@ -110,12 +106,6 @@ static const CFRange kRangeZero = {0, 0};
     size_t glyphCount = (size_t)CTRunGetGlyphCount(run);
     
     CGPoint *positions = [self positionsForRun:run];
-    
-    // Fancy Accelerate math. Modifies positions based on touch points.
-    [self adjustTextPositions:positions
-                        count:glyphCount
-                       origin:textOrigin
-                  touchPoints:[self.touchPointForIdentifier allValues]];
     
     const CGGlyph *glyphs = [self glyphsForRun:run];
     CGContextShowGlyphsAtPositions(context, glyphs, positions, glyphCount);
@@ -159,82 +149,6 @@ static const CFRange kRangeZero = {0, 0};
     }
     return positions;
 }
-
-- (void)adjustTextPositions:(CGPoint *)positions
-                      count:(NSUInteger)count
-                     origin:(CGPoint)textOrigin
-                touchPoints:(NSArray *)touchPoints
-{
-    // Text space -> View Space
-    [self addPoint:textOrigin toPositions:positions count:count];
-    
-    // Apply all the touches
-    for (TouchPoint *touchPoint in touchPoints) {
-        [self adjustViewPositions:positions count:count forTouchPoint:touchPoint];
-    }
-    
-    // View Space -> Text Space
-    [self subtractPoint:textOrigin fromPositions:positions count:count];
-}
-
-/*
-- (void)addPoint:(CGPoint)point
-     toPositions:(CGPoint *)positions
-           count:(NSUInteger)count
-{
-    float *xStart = (float *)positions;
-    float *yStart = xStart + 1;
-    float pointX = point.x;
-    float pointY = point.y;
-    //vDSP_vsadd(xStart, 2, &(point.x), xStart, 2, count);
-    vDSP_vsadd(xStart, 2, &pointX, xStart, 2, count);
-    vDSP_vsadd(yStart, 2, &pointY, yStart, 2, count);
-}
-*/
-
-/*
-- (void)subtractPoint:(CGPoint)point
-        fromPositions:(CGPoint *)positions
-                count:(NSUInteger)count
-{
-    point.x = -point.x;
-    point.y = -point.y;
-    [self addPoint:point toPositions:positions count:count];
-}
-*/
-
-/*
-- (void)adjustViewPositions:(CGPoint *)positions count:(NSUInteger)count forTouchPoint:(TouchPoint *)touchPoint
-{
-    //CGFloat *adjustment = [self adjustmentBufferForCount:count];
-    float *adjustment = (float *)[self adjustmentBufferForCount:count];
-    CGPoint point = touchPoint.point;
-    float scale = touchPoint.scale;
-    
-    // Tuning variables. How far away can a glyph move?
-    float highClip = kGlyphAdjustmentClip;
-    float lowClip = -kGlyphAdjustmentClip;
-    
-    // adjust = position - touchPoint
-    memcpy(adjustment, positions, sizeof(CGPoint) * count);
-    [self subtractPoint:point fromPositions:(CGPoint *)adjustment count:count];
-    
-    // Convert to polar coordinates (distance/angle)
-    vDSP_polar(adjustment, 2, adjustment, 2, count);
-    
-    // Scale distance
-    vDSP_svdiv(&scale, adjustment, 2, adjustment, 2, count);
-    
-    // Clip distances to range
-    vDSP_vclip(adjustment, 2, &lowClip, &highClip, adjustment, 2, count);
-    
-    // Convert back to rectangular cordinates (x,y)
-    vDSP_rect(adjustment, 2, adjustment, 2, count);
-    
-    // Apply adjustment
-    vDSP_vsub(adjustment, 1, (float *)positions, 1, (float *)positions, 1, count * 2);
-}
-*/
 
 #pragma mark -
 #pragma mark Glyphs
@@ -303,6 +217,7 @@ void ResizeBufferToAtLeast(void **buffer, size_t size) {
     return self;
 }
 
+/*
 #pragma mark -
 #pragma mark CALayer
 
@@ -315,5 +230,6 @@ void ResizeBufferToAtLeast(void **buffer, size_t size) {
         return [super needsDisplayForKey:key];
     }
 }
+*/
 
 @end
